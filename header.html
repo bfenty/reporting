@@ -1,0 +1,59 @@
+{{define "header"}}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<a class="navbar-brand" href="#">{{.Title}}</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item active">
+      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+    </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/skus">SKU Search <span class="sr-only">(current)</span></a>
+      </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Dropdown
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">Something else here</a>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+    </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/logout">Logout <span class="sr-only">(current)</span></a>
+      </li>
+  </ul>
+</div>
+</nav>
+<div id="myToast" role="alert" class="toast fade show" data-delay="10000" aria-live="assertive" aria-atomic="true" style="position:fixed; right:0" id="myToast">
+      <div class="toast-header">
+          <img src="..." class="rounded mr-2" alt="...">
+          <strong class="me-auto"><i class="bi-gift-fill"></i>{{.Message.Title}}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            <span aria-hidden="true">&times;</span>
+      </div>
+      <div class="toast-body">
+          {{.Message.Body}}
+      </div>
+  </div>
+{{end}}
+
+{{define "footer"}}
+<footer class="bg-dark text-center text-white fixed-bottom">
+  <div class="text-center p-3">
+    © 2022 Copyright:
+    <a class="text-white" href="https://beadboxbargains.com/">BeadBoxBargains.com</a>
+  </div>
+</footer>
+{{end}}

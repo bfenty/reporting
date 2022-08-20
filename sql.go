@@ -9,12 +9,9 @@ _ "github.com/go-sql-driver/mysql"
 "os"
 )
 
-type Graph []struct {
-  Date      time.Time
-  User      string
-  Station   string
-  items     int
-  hours     float64
+type Graph struct {
+  User        string
+  Efficiency  *float64
 }
 
 var db *sql.DB
@@ -29,7 +26,7 @@ func opendb() (db *sql.DB, messagebox Message) {
   fmt.Println("server:",os.Getenv("SERVER"))
   fmt.Println("port:",os.Getenv("PORT"))
   fmt.Println("Opening Database...")
-  connectstring := os.Getenv("USER")+":"+os.Getenv("PASS")+"@tcp("+os.Getenv("SERVER")+":"+os.Getenv("PORT")+")/orders"
+  connectstring := os.Getenv("USER")+":"+os.Getenv("PASS")+"@tcp("+os.Getenv("SERVER")+":"+os.Getenv("PORT")+")/orders?parseTime=true"
   fmt.Println("Connection: ",connectstring)
   db, err = sql.Open("mysql",
   connectstring)
@@ -51,12 +48,68 @@ func opendb() (db *sql.DB, messagebox Message) {
   return db,messagebox
 }
 
-func efficiency() (graph Graph, message Message){
+func Orderlookup(ordernum int) (message Message,orderdetail OrderDetail) {
+  // Get a database handle.
+  var err error
 
   //Test Connection
   pingErr := db.Ping()
-  if pingErr != nil {return nil,handleerror(pingErr)}
-  return
+  if pingErr != nil {
+    return handleerror(pingErr),orderdetail
+  }
+
+  //Query
+  var newquery string = "select a.id,b.user,b.time,c.user,c.time from orders a LEFT JOIN (select * FROM scans where station='pick') b ON a.id = b.ordernum LEFT JOIN (select * FROM scans where station='ship') c ON a.id = c.ordernum  WHERE a.statusid not in (0) and a.id = ? order by 1,5;"
+
+  //Run Query
+  fmt.Println("Looking up order: ",ordernum)
+  location, err := time.LoadLocation("America/Chicago")
+  rows, err := db.Query(newquery,ordernum)
+  if err != nil {
+    return handleerror(err),orderdetail
+  }
+  defer rows.Close()
+
+  //Pull Data
+  for rows.Next() {
+    err := rows.Scan(&orderdetail.ID,&orderdetail.Picker,&orderdetail.Picktime,&orderdetail.Shipper,&orderdetail.Shiptime)
+    if err != nil {
+      return handleerror(err),orderdetail
+    }
+  }
+  if orderdetail.ID == 0 {message.Body = "Order not found"}
+  orderdetail.Picktime = orderdetail.Picktime.In(location)
+  orderdetail.Shiptime = orderdetail.Shiptime.In(location)
+  return message, orderdetail
+}
+
+func Efficiency() (message Message, graph []Graph){
+
+  //Test Connection
+  pingErr := db.Ping()
+  if pingErr != nil {return handleerror(pingErr),graph}
+
+  var newquery string = "SELECT d.user,sum(d.items)/sum(e.hours) FROM (SELECT a.date,a.user,c.usercode,sum(b.items_total) items FROM (SELECT ordernum, station, user, DATE(scans.time) as date from scans where station='pick' group by ordernum, station, user, DATE(scans.time)) a INNER JOIN (SELECT id, items_total from orders) b on a.ordernum = b.id LEFT JOIN (SELECT usercode,username from users) c on a.user = c.username GROUP BY a.date,a.user,c.usercode) d LEFT JOIN (SELECT DATE(clock_in) clockin,payroll_id, sum(paid_hours) hours from shifts group by DATE(clock_in),payroll_id) e on d.date = e.clockin and d.usercode = e.payroll_id GROUP BY d.user ORDER BY 1,2;"
+
+  //Run Query
+  fmt.Println("Running Report")
+  // location, err := time.LoadLocation("America/Chicago")
+  rows, err := db.Query(newquery)
+  if err != nil {
+    return handleerror(err),graph
+  }
+  defer rows.Close()
+
+  //Pull Data
+  for rows.Next() {
+    var r Graph
+    err := rows.Scan(&r.User,&r.Efficiency)
+    if err != nil {
+      return handleerror(err),graph
+    }
+    graph = append(graph,r)
+  }
+  return message,graph
 }
 
 //Authenticate user from DB

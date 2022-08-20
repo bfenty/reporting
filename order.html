@@ -1,0 +1,26 @@
+<html>
+<head>
+{{template "header"}}
+</head>
+<body>
+  {{template "navigation" .}}
+  <br>
+  {{template "messagebox" .}}
+  <div class="container3">
+    <div class="formentry">
+      <form action="/order" method="POST">
+      <h2>Order Number</h2>
+      <input type="text" class="form-control" name="ordernum" id="ordernum"><br>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    </div>
+  </div>
+  <div class="container">
+    <div class="Order-ID"><h2>Order ID: {{.Order.ID}}</div>
+    <div class="Picked">Picked By: {{.Order.Picker}}<br>{{.Order.Picktime}}</div>
+    <div class="Shipped">Shipped By: {{.Order.Shipper}}<br>{{.Order.Shiptime}}</div>
+    <div class="Box"></div>
+  </div>
+  {{template "footer" .}}
+</body>
+</html>

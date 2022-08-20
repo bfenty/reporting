@@ -31,7 +31,7 @@ type Credentials struct {
 }
 
 func Signin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Loggin in...")
+	fmt.Println("Logging in...")
 	var creds Credentials
 				// fmt.Println("method:", r.Method) //get request method
 				r.ParseForm()
@@ -71,7 +71,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	})
 	// fmt.Println(sessions)
 
-	http.Redirect(w, r, "/skus", http.StatusSeeOther)
+	http.Redirect(w, r, "/order", http.StatusSeeOther)
 }
 
 func auth(w http.ResponseWriter, r *http.Request) (permission string){

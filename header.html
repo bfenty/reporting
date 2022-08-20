@@ -1,4 +1,76 @@
 {{define "header"}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>{{template "loginjs" .}}</script>
+<style>
+.container {  display: grid;
+grid-template-columns: 1fr 1fr 1fr 1fr;
+grid-template-rows: 0.4fr 0.4fr 2.2fr 1fr;
+gap: 10px 10px;
+grid-auto-flow: row;
+}
+
+.Order-ID { grid-area: 1 / 2 / 2 / 4;
+padding: 10px; }
+
+.Picked { grid-area: 3 / 2 / 4 / 3;
+padding: 10px; }
+
+.Shipped { grid-area: 3 / 3 / 4 / 4;
+padding: 10px; }
+
+.Box { grid-area: 1 / 2 / 4 / 4;
+padding: 10px;
+border-style: solid;
+border-radius: 15px;
+}
+
+.container2 {  display: grid;
+  grid-template-columns: 0.5fr 2fr 0.5fr;
+  grid-template-rows: 0.2fr 2.6fr 0.2fr;
+  gap: 10px 10px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    ". . ."
+    ". messagebox ."
+    ". . .";
+}
+
+.container3 {  display: grid;
+  grid-template-columns: 1.2fr 0.6fr 1.2fr;
+  grid-template-rows: 0.2fr 2.6fr 0.2fr;
+  gap: 10px 10px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    ". . ."
+    ". formentry ."
+    ". . .";
+}
+
+.messagebox { grid-area: messagebox;
+  background-color:#ffcccc;
+  color:333333;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 15px;
+  text-align:center;
+}
+
+.formentry { grid-area: formentry;
+  background-color:#ffffff;
+  color:333333;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 15px;
+  text-align:center;
+}
+
+</style>
+{{end}}
+
+{{define "navigation"}}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 <a class="navbar-brand" href="#">{{.Title}}</a>
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,8 +83,11 @@
       <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
     </li>
       <li class="nav-item active">
-        <a class="nav-link" href="/skus">SKU Search <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/order">Order Lookup<span class="sr-only">(current)</span></a>
       </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/dashboard">Dashboard<span class="sr-only">(current)</span></a>
+        </li>
     <li class="nav-item">
       <a class="nav-link" href="#">Link</a>
     </li>
@@ -36,17 +111,15 @@
   </ul>
 </div>
 </nav>
-<div id="myToast" role="alert" class="toast fade show" data-delay="10000" aria-live="assertive" aria-atomic="true" style="position:fixed; right:0" id="myToast">
-      <div class="toast-header">
-          <img src="..." class="rounded mr-2" alt="...">
-          <strong class="me-auto"><i class="bi-gift-fill"></i>{{.Message.Title}}</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            <span aria-hidden="true">&times;</span>
-      </div>
-      <div class="toast-body">
-          {{.Message.Body}}
-      </div>
-  </div>
+{{end}}
+
+{{define "messagebox"}}
+{{if eq .Message.Body ""}}{{else}}
+<div class="container2">
+  <div class="messagebox">{{.Message.Body}}</div>
+</div>
+<hr>
+{{end}}
 {{end}}
 
 {{define "footer"}}

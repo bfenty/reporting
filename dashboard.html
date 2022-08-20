@@ -1,0 +1,57 @@
+<html>
+<head>
+{{template "header"}}
+
+</head>
+<body>
+  {{template "navigation" .}}
+  <br>
+  {{template "messagebox" .}}
+  <div class="container3">
+    <div class="formentry">
+
+      <canvas id="myChart" width="20vw" height="20vh"></canvas>
+    </div>
+  </div>
+  <script>
+  const ctx = document.getElementById('myChart');
+  const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: [{{range .Graph}}'{{.User}}',{{end}}],
+          datasets: [{
+              label: 'Items Picked/Hr',
+              data: [{{range .Graph}}'{{.Efficiency}}',{{end}}],
+              backgroundColor: [
+                  'rgba(102, 255, 153, 0.2)',
+                  'rgba(102, 255, 153, 0.2)',
+                  'rgba(102, 255, 153, 0.2)',
+                  'rgba(102, 255, 153, 0.2)',
+                  'rgba(102, 255, 153, 0.2)',
+                  'rgba(102, 255, 153, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(0, 102, 0, 1)',
+                  'rgba(0, 102, 0, 1)',
+                  'rgba(0, 102, 0, 1)',
+                  'rgba(0, 102, 0, 1)',
+                  'rgba(0, 102, 0, 1)',
+                  'rgba(0, 102, 0, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+        response: true,
+        maintainaspectratio: false,
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+  </script>
+  {{template "footer" .}}
+</body>
+</html>

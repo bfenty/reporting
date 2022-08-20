@@ -71,7 +71,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	})
 	// fmt.Println(sessions)
 
-	http.Redirect(w, r, "/order", http.StatusSeeOther)
+	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
 
 func auth(w http.ResponseWriter, r *http.Request) (permission string){

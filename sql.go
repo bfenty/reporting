@@ -10,7 +10,7 @@ _ "github.com/go-sql-driver/mysql"
 )
 
 type Graph struct {
-  User        string
+  User        *string
   Efficiency  *float64
 }
 

@@ -9,9 +9,9 @@ import (
 )
 
 type OrderDetail struct {
-	ID int
-	Picker string
-	Shipper string
+	ID *int
+	Picker *string
+	Shipper *string
 	Picktime time.Time
 	Shiptime time.Time
 }

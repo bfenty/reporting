@@ -89,7 +89,7 @@ func Efficiency() (message Message, graph []Graph){
   pingErr := db.Ping()
   if pingErr != nil {return handleerror(pingErr),graph}
 
-  var newquery string = "SELECT d.user,sum(d.items)/sum(e.hours) FROM (SELECT a.date,a.user,c.usercode,sum(b.items_total) items FROM (SELECT ordernum, station, user, DATE(scans.time) as date from scans where station='pick' group by ordernum, station, user, DATE(scans.time)) a INNER JOIN (SELECT id, items_total from orders) b on a.ordernum = b.id LEFT JOIN (SELECT usercode,username from users) c on a.user = c.username GROUP BY a.date,a.user,c.usercode) d LEFT JOIN (SELECT DATE(clock_in) clockin,payroll_id, sum(paid_hours) hours from shifts group by DATE(clock_in),payroll_id) e on d.date = e.clockin and d.usercode = e.payroll_id GROUP BY d.user ORDER BY 1,2;"
+  var newquery string = "SELECT d.user,sum(d.items)/sum(e.hours) FROM (SELECT a.date,a.user,c.usercode,sum(b.items_total) items FROM (SELECT ordernum, station, user, DATE(scans.time) as date from scans where station='pick' group by ordernum, station, user, DATE(scans.time)) a INNER JOIN (SELECT id, items_total from orders) b on a.ordernum = b.id LEFT JOIN (SELECT usercode,username from users) c on a.user = c.username GROUP BY a.date,a.user,c.usercode) d LEFT JOIN (SELECT DATE(clock_in) clockin,payroll_id, sum(paid_hours) hours from shifts where role='Shipping' group by DATE(clock_in),payroll_id) e on d.date = e.clockin and d.usercode = e.payroll_id GROUP BY d.user ORDER BY 1,2;"
 
   //Run Query
   fmt.Println("Running Report")

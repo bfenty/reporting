@@ -7,50 +7,61 @@
   {{template "navigation" .}}
   <br>
   {{template "messagebox" .}}
-  <div class="container3">
-    <div class="formentry">
-
-      <canvas id="myChart" width="20vw" height="20vh"></canvas>
+  <div class="container">
+    <div class="graph1">
+        <canvas id="myChart" width="15vw" height="10vh"></canvas>
     </div>
+    <div class="graph2">
+        <canvas id="myChart2" width="15vw" height="10vh"></canvas>
+    </div>
+    <div class="graph3"></div>
+    <div class="graph4"></div>
+    <div class="graph5"></div>
+    <div class="graph6"></div>
   </div>
   <script>
-  const ctx = document.getElementById('myChart');
-  const myChart = new Chart(ctx, {
-      type: 'bar',
+    new Chart("myChart", {
+    type: "bar",
+    data: {
+      labels: [{{range .Graph1}}'{{.X}}',{{end}}],
+      datasets: [{
+        label: 'Items Picked/Hr',
+        data: [{{range .Graph1}}'{{.Y}}',{{end}}],
+        backgroundColor: ['rgba(102, 255, 153, 0.2)'],
+        borderColor: ['rgba(0, 102, 0, 1)'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      legend: {display: false},
+      scales: {
+        xAxes: [{ticks: {min: 40, max:160}}],
+        yAxes: [{ticks: {min: 6, max:16}}],
+      }
+    }
+    });
+      new Chart("myChart2", {
+      type: "line",
       data: {
-          labels: [{{range .Graph}}'{{.User}}',{{end}}],
-          datasets: [{
-              label: 'Items Picked/Hr',
-              data: [{{range .Graph}}'{{.Efficiency}}',{{end}}],
-              backgroundColor: [
-                  'rgba(102, 255, 153, 0.2)',
-                  'rgba(102, 255, 153, 0.2)',
-                  'rgba(102, 255, 153, 0.2)',
-                  'rgba(102, 255, 153, 0.2)',
-                  'rgba(102, 255, 153, 0.2)',
-                  'rgba(102, 255, 153, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(0, 102, 0, 1)',
-                  'rgba(0, 102, 0, 1)',
-                  'rgba(0, 102, 0, 1)',
-                  'rgba(0, 102, 0, 1)',
-                  'rgba(0, 102, 0, 1)',
-                  'rgba(0, 102, 0, 1)'
-              ],
-              borderWidth: 1
-          }]
+        labels: [{{range .Graph2}}'{{.X}}',{{end}}],
+        datasets: [{
+          label: 'Items Picked/Hr',
+          pointRadius: 4,
+          pointBackgroundColor: 'rgba(0, 102, 0, 1)',
+          borderColor: 'rgba(0, 102, 0, 1)',
+          data: [{{range .Graph2}}'{{.Y}}',{{end}}]
+        }]
       },
       options: {
         response: true,
         maintainaspectratio: false,
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
-          }
+        legend: {display: false},
+        scales: {
+          xAxes: [{ticks: {min: 40, max:160}}],
+          yAxes: [{ticks: {min: 6, max:16}}],
+        }
       }
-  });
+      });
   </script>
   {{template "footer" .}}
 </body>

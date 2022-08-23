@@ -20,7 +20,8 @@ type Page struct{
   Title string
   Message Message
 	Order OrderDetail
-	Graph []Graph
+	Graph1 []Graph
+	Graph2 []Graph
 }
 
 type Message struct {
@@ -80,7 +81,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		// if ordernum == "" {
 		// 	page.Message.Body = ""
 		// }
-		page.Message,page.Graph  = Efficiency()
+		page.Message,page.Graph1  = Efficiency()
+		page.Message,page.Graph2 = Groupefficiency()
 		// page.Order.ID=67099
     fmt.Println(page)
     t.Execute(w, page)

@@ -49,6 +49,74 @@ border-radius: 15px;
     ". . .";
 }
 
+.container {  display: grid;
+  grid-template-columns: 5% 30% 30% 30% 5%;
+  grid-template-rows: 0.1fr 1.7fr 1.8fr 0.1fr;
+  gap: 10px 10px;
+  grid-auto-flow: row;
+  max-width: none;
+  grid-template-areas:
+    ". . . . ."
+    ". graph1 graph2 graph3 ."
+    ". graph4 graph5 graph6 ."
+    ". . . . .";
+}
+
+.graph1 { grid-area: graph1;
+  background-color:#ffffff;
+  color:333333;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 15px;
+  text-align:center;
+}
+
+.graph2 { grid-area: graph2;
+  background-color:#ffffff;
+  color:333333;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 15px;
+  text-align:center;
+}
+
+.graph3 { grid-area: graph3;
+  background-color:#ffffff;
+  color:333333;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 15px;
+  text-align:center;
+}
+
+.graph4 { grid-area: graph4;
+  background-color:#ffffff;
+  color:333333;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 15px;
+  text-align:center;
+}
+
+.graph5 { grid-area: graph5;
+  background-color:#ffffff;
+  color:333333;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 15px;
+  text-align:center;
+}
+
+.graph6 { grid-area: graph6;
+  background-color:#ffffff;
+  color:333333;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 15px;
+  text-align:center;
+}
+
+
 .messagebox { grid-area: messagebox;
   background-color:#ffcccc;
   color:333333;

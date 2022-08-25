@@ -20,6 +20,7 @@ type Page struct{
   Title string
   Message Message
 	Order OrderDetail
+	Permission string
 	Graph1 []Graph
 	Graph2 []Graph
 }
@@ -57,10 +58,12 @@ func main() {
 	var messagebox Message
 	db, messagebox = opendb()
 	fmt.Println(messagebox.Body)
-	http.HandleFunc("/", report)
+	http.HandleFunc("/", login)
   http.HandleFunc("/login", login)
+  http.HandleFunc("/signup", signup)
   http.HandleFunc("/logout", Logout)
   http.HandleFunc("/signin", Signin)
+  http.HandleFunc("/usercreate", Usercreate)
 	http.HandleFunc("/order", Order)
 	http.HandleFunc("/dashboard", Dashboard)
 	http.ListenAndServe(":8081", nil)
@@ -73,10 +76,11 @@ func report(w http.ResponseWriter, r *http.Request) {
 }
 
 func Dashboard(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(auth(w,r))
+var page Page
+page.Permission = auth(w,r)
+	// fmt.Println(auth(w,r))
     t, _ := template.ParseFiles("dashboard.html","header.html","login.js")
 		fmt.Println("Loading Dashboard...")
-    var page Page
     page.Title = "Dashboard"
 		// if ordernum == "" {
 		// 	page.Message.Body = ""
@@ -89,10 +93,11 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 }
 
 func Order(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(auth(w,r))
+var page Page
+page.Permission = auth(w,r)
+	// fmt.Println(auth(w,r))
     t, _ := template.ParseFiles("order.html","header.html","login.js")
 		fmt.Println("Looking up order ",r.FormValue("ordernum"))
-    var page Page
     page.Title = "Order Lookup"
     ordernum,err := strconv.Atoi(r.FormValue("ordernum"))
 		if err != nil {
@@ -111,6 +116,15 @@ func login(w http.ResponseWriter, r *http.Request) {
     t, _ := template.ParseFiles("login.html","header.html","login.js")
     var page Page
     page.Title = "Login"
+    page.Message = message(r)
+    fmt.Println(page)
+    t.Execute(w, page)
+}
+
+func signup(w http.ResponseWriter, r *http.Request) {
+    t, _ := template.ParseFiles("signup.html","header.html","login.js")
+    var page Page
+    page.Title = "Sign Up"
     page.Message = message(r)
     fmt.Println(page)
     t.Execute(w, page)

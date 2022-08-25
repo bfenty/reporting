@@ -1,0 +1,26 @@
+<html>
+<head>
+{{template "header"}}
+</head>
+<body>
+  {{template "navigation" .}}
+  <br>
+  {{template "messagebox" .}}
+  <div class = "container3">
+    <div class = "formentry">
+  <form action="/usercreate" method="POST">
+    <label for="exampleInputEmail1"><h3>Username</h3></label>
+    <input type="text" class="form-control" name="username" id="username"><br>
+    <label for="exampleInputPassword1"><h3>Password</h3></label>
+    <input type="password" class="form-control" name="password" id="password"><br>
+    <label for="exampleInputPassword1"><h3>Re-Type Password</h3></label>
+    <input type="password" class="form-control" name="password2" id="password2"><br>
+    <label for="exampleInputPassword1"><h3>Shared Secret:</h3></label>
+    <input type="password" class="form-control" name="secret" id="secret"><br>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+</div>
+  </div>
+  {{template "footer" .}}
+</body>
+</html>

@@ -30,6 +30,31 @@ type Credentials struct {
 	Username string `json:"username"`
 }
 
+func Usercreate(w http.ResponseWriter, r *http.Request){
+	var creds Credentials
+	var message Message
+	var success bool
+				// fmt.Println("method:", r.Method) //get request method
+				r.ParseForm()
+				// logic part of log in
+				creds.Username = r.FormValue("username")
+				creds.Password = r.FormValue("password")
+				if creds.Password != r.FormValue("password2") {
+					message.Title = "Non-matching passwords"
+					message.Body = "Passwords do not match"
+					http.Redirect(w, r, "/signup?messagetitle="+message.Title+"&messagebody="+message.Body, http.StatusSeeOther)
+					return
+				}
+				fmt.Println("Creating user ",creds.Username,"...")
+				message, success = Updatepass(creds.Username,creds.Password,r.FormValue("secret"))
+				if success {
+					http.Redirect(w, r, "/dashboard?messagetitle="+message.Title+"&messagebody="+message.Body, http.StatusSeeOther)
+					return
+				}
+				http.Redirect(w, r, "/signup?messagetitle="+message.Title+"&messagebody="+message.Body, http.StatusSeeOther)
+				return
+}
+
 func Signin(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Logging in...")
 	var creds Credentials
@@ -47,6 +72,12 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	if permission == "notfound" {
 		fmt.Println(message.Body)
 		http.Redirect(w, r, "/login?messagetitle="+message.Title+"&messagebody="+message.Body, http.StatusSeeOther)
+		return
+	}
+
+	if permission == "newuser" {
+		fmt.Println(message.Body)
+		http.Redirect(w, r, "/signup?messagetitle="+message.Title+"&messagebody="+message.Body, http.StatusSeeOther)
 		return
 	}
 
@@ -78,7 +109,6 @@ func auth(w http.ResponseWriter, r *http.Request) (permission string){
 	c, err := r.Cookie("session_token")
 	if err != nil {
 		if err == http.ErrNoCookie {
-
 			//Redirect Login
 			http.Redirect(w, r, "/login?messagetitle=User Unauthorized&messagebody=Please login to use this site", http.StatusSeeOther)
 			// If the cookie is not set, return an unauthorized status
@@ -93,12 +123,14 @@ func auth(w http.ResponseWriter, r *http.Request) (permission string){
 		// If the session token is not present in session map, return an unauthorized error
 		// w.WriteHeader(http.StatusUnauthorized)
 		fmt.Println("Unauthorized")
+		http.Redirect(w, r, "/login?messagetitle=User Unauthorized&messagebody=Please login to use this site", http.StatusSeeOther)
 		return "Unauthorized"
 	}
 	if userSession.isExpired() {
 		delete(sessions, sessionToken)
 		// w.WriteHeader(http.StatusUnauthorized)
 		fmt.Println("Unauthorized")
+		http.Redirect(w, r, "/login?messagetitle=User Unauthorized&messagebody=Please login to use this site", http.StatusSeeOther)
 		return "Unauthorized"
 	}
 	// Finally, return the welcome message to the user
@@ -132,10 +164,12 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		if err == http.ErrNoCookie {
 			// If the cookie is not set, return an unauthorized status
 			w.WriteHeader(http.StatusUnauthorized)
+			http.Redirect(w, r, "/login?messagetitle=User Unauthorized&messagebody=Please login to use this site", http.StatusSeeOther)
 			return
 		}
 		// For any other type of error, return a bad request status
 		w.WriteHeader(http.StatusBadRequest)
+		http.Redirect(w, r, "/login?messagetitle=User Unauthorized&messagebody=Please login to use this site", http.StatusSeeOther)
 		return
 	}
 	sessionToken := c.Value

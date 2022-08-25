@@ -151,7 +151,7 @@ func Updatepass (user string, pass string, secret string) (message Message, succ
   }
 
   //Check for secret
-  if secret != "beadbox" {
+  if secret != os.Getenv("SECRET") {
     message.Title = "Secret Auth Failed"
     message.Body = "Secret Auth Failed"
     return message,false

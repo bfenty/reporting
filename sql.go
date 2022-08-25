@@ -159,7 +159,7 @@ func Updatepass (user string, pass string, secret string) (message Message, succ
 
   hashpass := hashAndSalt([]byte(pass))
   fmt.Println("Creating password hash of length ",len(hashpass),": ", hashpass)
-  var newquery string = "update users set password = ? where username = ?"
+  var newquery string = "update users set password = ? where username = ? and password = ''"
   rows, err := db.Query(newquery,hashpass,user)
   if err != nil {
       return handleerror(err),false

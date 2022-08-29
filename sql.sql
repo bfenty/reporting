@@ -33,3 +33,9 @@ GROUP BY CAST(c.time as date)
 ) shipments
 LEFT JOIN (select cast(clock_in as date) date,sum(paid_hours) hours FROM shifts WHERE role = 'Shipping' group by cast(clock_in as date)) d on d.date = shipments.date
 order by 1;
+
+//error reporting
+select a.orderid, a.issue,b.user,b.time from errors a inner join scans b on a.orderid = b.ordernum where b.station="pick" and a.issue in ('Incorrect','Missing')order by 1 desc;
+
+//errors per hour
+select user, count(*) errors from (select a.orderid, a.issue,b.user,b.time from errors a inner join scans b on a.orderid = b.ordernum where b.station="pick" and a.issue in ('Incorrect','Missing') and time between '2022-08-15' and '2022-08-20' ) c group by user;

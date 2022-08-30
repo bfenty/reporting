@@ -14,8 +14,9 @@
     <div class="graph2">
         <canvas id="myChart2" width="15vw" height="10vh"></canvas>
     </div>
-    <div class="graph3"></div>
+    <div class="graph3">
         <canvas id="myChart3" width="15vw" height="10vh"></canvas>
+    </div>
     <div class="graph4"></div>
     <div class="graph5"></div>
     <div class="graph6"></div>
@@ -68,7 +69,7 @@
         data: {
           labels: [{{range .Graph3}}'{{.X}}',{{end}}],
           datasets: [{
-            label: 'Items Picked/Hr',
+            label: 'Errors/Hr',
             data: [{{range .Graph3}}'{{.Y}}',{{end}}],
             backgroundColor: ['rgba(102, 255, 153, 0.2)'],
             borderColor: ['rgba(0, 102, 0, 1)'],

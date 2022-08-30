@@ -15,6 +15,7 @@
         <canvas id="myChart2" width="15vw" height="10vh"></canvas>
     </div>
     <div class="graph3"></div>
+        <canvas id="myChart3" width="15vw" height="10vh"></canvas>
     <div class="graph4"></div>
     <div class="graph5"></div>
     <div class="graph6"></div>
@@ -62,6 +63,26 @@
         }
       }
       });
+        new Chart("myChart3", {
+        type: "bar",
+        data: {
+          labels: [{{range .Graph3}}'{{.X}}',{{end}}],
+          datasets: [{
+            label: 'Items Picked/Hr',
+            data: [{{range .Graph3}}'{{.Y}}',{{end}}],
+            backgroundColor: ['rgba(102, 255, 153, 0.2)'],
+            borderColor: ['rgba(0, 102, 0, 1)'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          legend: {display: false},
+          scales: {
+            xAxes: [{ticks: {min: 40, max:160}}],
+            yAxes: [{ticks: {min: 6, max:16}}],
+          }
+        }
+        });
   </script>
   {{template "footer" .}}
 </body>

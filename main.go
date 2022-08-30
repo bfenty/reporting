@@ -88,7 +88,7 @@ page.Permission = auth(w,r)
 		// }
 		page.Message,page.Graph1  = Efficiency()
 		page.Message,page.Graph2 = Groupefficiency()
-		page.Message,page.Graph3 = ErrorLookup(time.Now().AddDate(0,0,-7),time.Now())
+		page.Message,page.Graph3 = ErrorLookup(time.Now().AddDate(0,0,-21),time.Now())
 		// page.Order.ID=67099
     fmt.Println(page)
     t.Execute(w, page)

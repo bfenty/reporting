@@ -86,6 +86,41 @@ func Orderlookup(ordernum int) (message Message,orderdetail OrderDetail) {
   return message, orderdetail
 }
 
+//Errors reporting
+func ErrorLookup(startdate time, enddate time) (message Message, graph []Graph){
+  // Get a database handle.
+  var err error
+
+  //Test Connection
+  pingErr := db.Ping()
+  if pingErr != nil {
+    db, message = opendb()
+    return handleerror(pingErr),orderdetail
+  }
+
+  //Query
+  var newquery string = "select user, round(errors/hours,3) error_rate FROM (select user,usercode,count(*) as errors FROM (select a.orderid, a.issue,b.user,c.usercode,b.time from errors a inner join scans b on a.orderid = b.ordernum left join users c on b.user=c.username where b.station='pick' and a.issue in ('Incorrect','Missing') and time between '?' and '?') d GROUP BY user,usercode) e LEFT JOIN (select payroll_id, sum(scheduled_hours) hours FROM shifts where clock_in between '?' and '?' group by payroll_id) f on e.usercode = f.payroll_id"
+
+  //Run Query
+  fmt.Println("Running Error Report")
+  rows, err := db.Query(newquery,startdate,enddate,startdate,enddate)
+  if err != nil {
+    return handleerror(err),graph
+  }
+  defer rows.Close()
+
+  //Pull Data
+  for rows.Next() {
+    var r Graph
+    err := rows.Scan(&r.X,&r.Y)
+    if err != nil {
+      return handleerror(err),graph
+    }
+    graph = append(graph,r)
+  }
+  return message,graph
+}
+
 func Efficiency() (message Message, graph []Graph){
 
   //Test Connection

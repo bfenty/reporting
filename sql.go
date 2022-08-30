@@ -87,7 +87,7 @@ func Orderlookup(ordernum int) (message Message,orderdetail OrderDetail) {
 }
 
 //Errors reporting
-func ErrorLookup(startdate time, enddate time) (message Message, graph []Graph){
+func ErrorLookup(startdate time.Time, enddate time.Time) (message Message, graph []Graph){
   // Get a database handle.
   var err error
 
@@ -95,7 +95,7 @@ func ErrorLookup(startdate time, enddate time) (message Message, graph []Graph){
   pingErr := db.Ping()
   if pingErr != nil {
     db, message = opendb()
-    return handleerror(pingErr),orderdetail
+    return handleerror(pingErr),graph
   }
 
   //Query

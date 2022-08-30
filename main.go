@@ -23,6 +23,7 @@ type Page struct{
 	Permission string
 	Graph1 []Graph
 	Graph2 []Graph
+	Graph3 []Graph
 }
 
 type Message struct {
@@ -87,7 +88,7 @@ page.Permission = auth(w,r)
 		// }
 		page.Message,page.Graph1  = Efficiency()
 		page.Message,page.Graph2 = Groupefficiency()
-		page.Message,page.Graph3 = ErrorLookup()
+		page.Message,page.Graph3 = ErrorLookup(time.Now().AddDate(0,0,-7),time.Now())
 		// page.Order.ID=67099
     fmt.Println(page)
     t.Execute(w, page)

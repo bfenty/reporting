@@ -147,16 +147,26 @@ border-radius: 15px;
 
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
   <ul class="navbar-nav mr-auto">
-    {{if eq .Permission ""}}{{else}}<li class="nav-item active">
+  {{if or (eq .Permission "admin") (eq .Permission "cs")}}
+    <li class="nav-item active">
       <a class="nav-link" href="/dashboard">Dashboard<span class="sr-only">(current)</span></a>
     </li>
+    {{end}}
+    {{if or (eq .Permission "admin") (eq .Permission "cs")}}
       <li class="nav-item active">
         <a class="nav-link" href="/order">Order Lookup<span class="sr-only">(current)</span></a>
       </li>
+      {{end}}
+      {{if or (eq .Permission "admin") (eq .Permission "cs")}}
+      <li class="nav-item active">
+        <a class="nav-link" href="/error">Errors <span class="sr-only">(current)</span></a>
+      </li>
+      {{end}}
+      {{if or (eq .Permission "admin") (eq .Permission "cs")}}
       <li class="nav-item active">
         <a class="nav-link" href="/logout">Logout <span class="sr-only">(current)</span></a>
       </li>
-    {{end}}
+      {{end}}
   </ul>
 </div>
 </nav>

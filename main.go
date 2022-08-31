@@ -66,6 +66,7 @@ func main() {
   http.HandleFunc("/signin", Signin)
   http.HandleFunc("/usercreate", Usercreate)
 	http.HandleFunc("/order", Order)
+	http.HandleFunc("/error", Error)
 	http.HandleFunc("/dashboard", Dashboard)
 	http.ListenAndServe(":8081", nil)
 }
@@ -105,12 +106,24 @@ page.Permission = auth(w,r)
 		if err != nil {
 			page.Message.Body = err.Error()
 		}
-		// if ordernum == "" {
-		// 	page.Message.Body = ""
-		// }
 		page.Message,page.Order  = Orderlookup(ordernum)
 		// page.Order.ID=67099
     fmt.Println(page)
+    t.Execute(w, page)
+}
+
+func Error(w http.ResponseWriter, r *http.Request) {
+		var page Page
+	  fmt.Println("Comment: ",r.FormValue("comment"))
+	  fmt.Println("Issue: ",r.FormValue("issue"))
+	  fmt.Println("orderid: ",r.FormValue("orderid"))
+		t, _ := template.ParseFiles("error.html","header.html","login.js")
+		page.Permission = auth(w,r)
+		page.Message = message(r)
+    page.Title = "Error Entry"
+		orderid,err := strconv.Atoi(r.FormValue("orderid"))
+		page.Message = handleerror(err)
+		page.Message = ErrorEnter(r.FormValue("comment"),r.FormValue("issue"),orderid)
     t.Execute(w, page)
 }
 

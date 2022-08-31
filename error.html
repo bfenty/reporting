@@ -1,0 +1,31 @@
+<html>
+<head>
+{{template "header"}}
+</head>
+<body>
+  {{template "navigation" .}}
+  <br>
+  {{template "messagebox" .}}
+  <div class="container3">
+    <div class="formentry">
+      <form action="/error" method="POST">
+      <h2>Error Entry</h2>
+      <label for="exampleInputEmail1">Order Number</label>
+      <input type="text" class="form-control" name="orderid" id="orderid">
+      <label for="exampleInputEmail1">Issue</label>
+      <select class="form-control" name="issue" id="issue">
+        <option value="Damage">Damage</option>
+        <option value="Incorrect">Incorrect</option>
+        <option value="Missing">Missing</option>
+        <option value="Lost">Lost</option>
+        <option value="Other">Other</option>
+      </select>
+      <label for="exampleInputEmail1">Comments</label>
+      <input type="text" class="form-control" name="comment" id="comment"><br>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    </div>
+  </div>
+  {{template "footer" .}}
+</body>
+</html>

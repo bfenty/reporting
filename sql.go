@@ -179,6 +179,25 @@ func Groupefficiency() (message Message, graph []Graph){
   return message,graph
 }
 
+func ErrorEnter(comment string, issue string, orderid int) (message Message) {
+  fmt.Println("Entering error...")
+  pingErr := db.Ping()
+  if pingErr != nil {
+      return handleerror(pingErr)
+  }
+
+  var newquery string = "REPLACE INTO errors(comment,issue,orderid) VALUES (?,?,?)"
+  fmt.Println("Query: ",newquery)
+  rows, err := db.Query(newquery,comment,issue,orderid)
+  if err != nil {
+      return handleerror(err)
+  }
+  defer rows.Close()
+  message.Title = "Success"
+  message.Body = "Success"
+  return message
+}
+
 func Updatepass (user string, pass string, secret string) (message Message, success bool){
   pingErr := db.Ping()
   if pingErr != nil {

@@ -7,6 +7,7 @@ _ "github.com/go-sql-driver/mysql"
 "fmt"
 "time"
 "os"
+"strconv"
 )
 
 type Graph struct {
@@ -180,6 +181,9 @@ func Groupefficiency() (message Message, graph []Graph){
 }
 
 func ErrorEnter(comment string, issue string, orderid int) (message Message) {
+  if orderid == 0 {
+    return message
+  }
   fmt.Println("Entering error...")
   pingErr := db.Ping()
   if pingErr != nil {
@@ -194,7 +198,7 @@ func ErrorEnter(comment string, issue string, orderid int) (message Message) {
   }
   defer rows.Close()
   message.Title = "Success"
-  message.Body = "Success"
+  message.Body = "Successfully entered: "+strconv.Itoa(orderid)+" "+issue+" "+comment
   return message
 }
 

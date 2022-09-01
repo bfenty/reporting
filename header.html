@@ -118,7 +118,6 @@ border-radius: 15px;
 
 
 .messagebox { grid-area: messagebox;
-  background-color:#ffcccc;
   color:333333;
   padding: 10px;
   border-style: solid;
@@ -175,7 +174,7 @@ border-radius: 15px;
 {{define "messagebox"}}
 {{if eq .Message.Body ""}}{{else}}
 <div class="container2">
-  <div class="messagebox">{{.Message.Body}}</div>
+  <div class="messagebox" {{if .Message.Success}}style="background-color:#ccffcc;"{{else}}style="background-color:#ffcccc;"{{end}}>{{.Message.Body}}</div>
 </div>
 <hr>
 {{end}}

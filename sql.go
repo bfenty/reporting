@@ -231,6 +231,7 @@ func ErrorEnter(comment string, issue string, orderid int) (message Message) {
   fmt.Println("Entering error...")
   pingErr := db.Ping()
   if pingErr != nil {
+      fmt.Println(pingErr)
       return handleerror(pingErr)
   }
 
@@ -238,10 +239,12 @@ func ErrorEnter(comment string, issue string, orderid int) (message Message) {
   fmt.Println("Query: ",newquery)
   rows, err := db.Query(newquery,comment,issue,orderid)
   if err != nil {
+      fmt.Println(err)
       return handleerror(err)
   }
   defer rows.Close()
   message.Title = "Success"
+  message.Success = true
   message.Body = "Successfully entered: "+strconv.Itoa(orderid)+" "+issue+" "+comment
   return message
 }
@@ -269,6 +272,7 @@ func Updatepass (user string, pass string, secret string) (message Message, succ
   defer rows.Close()
   message.Title = "Success"
   message.Body = "Success"
+  message.Success = true
   return message,true
 }
 
@@ -321,6 +325,7 @@ func userauth(user string, pass string) (permission string, message Message){
   if comparePasswords(dbpass,[]byte(pass)) {
     message.Title = "Success"
     message.Body = "Successfully logged in"
+    message.Success = true
     // permission = "notfound"
     return permission, message
   }

@@ -24,6 +24,10 @@ type Page struct{
 	Graph1 []Graph
 	Graph2 []Graph
 	Graph3 []Graph
+	Graph4 []Graph
+	Graph5 []Graph
+	Graph6 []Graph
+	Table1 []Table
 }
 
 type Message struct {
@@ -90,6 +94,7 @@ page.Permission = auth(w,r)
 		page.Message,page.Graph1  = Efficiency()
 		page.Message,page.Graph2 = Groupefficiency()
 		page.Message,page.Graph3 = ErrorLookup(time.Now().AddDate(0,0,-21),time.Now())
+		page.Message,page.Table1 = ErrorList(time.Now().AddDate(0,0,-21),time.Now(),5)
 		// page.Order.ID=67099
     fmt.Println(page)
     t.Execute(w, page)

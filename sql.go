@@ -15,6 +15,15 @@ type Graph struct {
   Y        *float64
 }
 
+type Table struct {
+  Col1  *string
+  Col2  *string
+  Col3  *string
+  Col4  *string
+  Col5  *string
+  Col6  *string
+}
+
 var db *sql.DB
 
 func opendb() (db *sql.DB, messagebox Message) {
@@ -85,6 +94,41 @@ func Orderlookup(ordernum int) (message Message,orderdetail OrderDetail) {
   orderdetail.Picktime = orderdetail.Picktime.In(location)
   orderdetail.Shiptime = orderdetail.Shiptime.In(location)
   return message, orderdetail
+}
+
+//Error List
+func ErrorList(startdate time.Time, enddate time.Time, limit int) (message Message, table []Table) {
+  // Get a database handle.
+  var err error
+
+  //Test Connection
+  pingErr := db.Ping()
+  if pingErr != nil {
+    db, message = opendb()
+    return handleerror(pingErr),table
+  }
+
+  //Query
+  var newquery string = "select a.orderid, b.user, a.issue, a.comment, b.time FROM errors a left join scans b on a.orderid = b.ordernum WHERE a.issue in ('Missing','Incorrect') AND b.station = 'pick' and b.time between ? and ? order by 5 desc limit ?"
+
+  //Run Query
+  fmt.Println("Running Error List")
+  rows, err := db.Query(newquery,startdate,enddate,limit)
+  if err != nil {
+    return handleerror(err),table
+  }
+  defer rows.Close()
+
+  //Pull Data
+  for rows.Next() {
+    var r Table
+    err := rows.Scan(&r.Col1,&r.Col2,&r.Col3,&r.Col4,&r.Col5)
+    if err != nil {
+      return handleerror(err),table
+    }
+    table = append(table,r)
+  }
+  return message,table
 }
 
 //Errors reporting

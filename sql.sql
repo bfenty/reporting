@@ -42,3 +42,6 @@ select user, round(errors/hours,3) error_rate FROM (select user,usercode,count(*
 
 //Recent errors
 select a.orderid, b.user, a.issue, a.comment, b.time FROM errors a left join scans b on a.orderid = b.ordernum WHERE a.issue in ('Missing','Incorrect') AND b.station = 'pick' order by 5 desc limit 10
+
+//Service Level
+SELECT week, sum(case when SL < 3 then 1 else 0 end)/count(*) as SL, sum(case when SL < 4 then 1 else 0 end)/count(*) as SL1 FROM (select DATE_ADD(cast(a.date_created as date), INTERVAL(-WEEKDAY(cast(a.date_created as date))) DAY) as week,TOTAL_WEEKDAYS(b.time,a.date_created) - 1 as SL FROM orders a LEFT JOIN scans b ON a.id = b.ordernum where b.station = 'ship') c GROUP BY week ORDER BY 1

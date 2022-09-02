@@ -13,6 +13,7 @@ _ "github.com/go-sql-driver/mysql"
 type Graph struct {
   X        *string
   Y        *float64
+  Z        *float64
 }
 
 type Table struct {
@@ -187,6 +188,35 @@ func Efficiency() (message Message, graph []Graph){
   for rows.Next() {
     var r Graph
     err := rows.Scan(&r.X,&r.Y)
+    if err != nil {
+      return handleerror(err),graph
+    }
+    graph = append(graph,r)
+  }
+  return message,graph
+}
+
+func Servicelevel() (message Message, graph []Graph){
+
+  //Test Connection
+  pingErr := db.Ping()
+  if pingErr != nil {return handleerror(pingErr),graph}
+
+  var newquery string = "SELECT week, sum(case when SL < 3 then 1 else 0 end)/count(*) as SL, sum(case when SL < 4 then 1 else 0 end)/count(*) as SL1 FROM (select DATE_ADD(cast(a.date_created as date), INTERVAL(-WEEKDAY(cast(a.date_created as date))) DAY) as week,TOTAL_WEEKDAYS(b.time,a.date_created) - 1 as SL FROM orders a LEFT JOIN scans b ON a.id = b.ordernum where b.station = 'ship') c GROUP BY week ORDER BY 1"
+
+  //Run Query
+  fmt.Println("Running Report")
+  // location, err := time.LoadLocation("America/Chicago")
+  rows, err := db.Query(newquery)
+  if err != nil {
+    return handleerror(err),graph
+  }
+  defer rows.Close()
+
+  //Pull Data
+  for rows.Next() {
+    var r Graph
+    err := rows.Scan(&r.X,&r.Y,&r.Z)
     if err != nil {
       return handleerror(err),graph
     }

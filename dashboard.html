@@ -18,6 +18,7 @@
         <canvas id="myChart3" width="15vw" height="10vh"></canvas>
     </div>
     <div class="graph4">
+        <canvas id="myChart4" width="15vw" height="10vh"></canvas>
     </div>
     <div class="graph5">
       <table class='table'>
@@ -92,6 +93,22 @@
         data: {
           labels: [{{range .Graph3}}'{{.X}}',{{end}}],
           datasets: [{
+            label: 'Target',
+            pointRadius: 0,
+            pointBackgroundColor: '#cccc00',
+            borderColor: '#cccc00',
+            data: [{{range .Graph3}}'0.05',{{end}}],
+            borderDash: [10,5],
+            type:'line'
+          },{
+            label: 'Limit',
+            pointRadius: 0,
+            pointBackgroundColor: '#CC3300',
+            borderColor: '#CC3300',
+            data: [{{range .Graph3}}'0.1',{{end}}],
+            borderDash: [10,5],
+            type:'line'
+          },{
             label: 'Errors/Hr',
             data: [{{range .Graph3}}'{{.Y}}',{{end}}],
             backgroundColor: ['#FFCCCC'],
@@ -100,6 +117,41 @@
           }]
         },
         options: {
+          legend: {display: false},
+          scales: {
+            xAxes: [{ticks: {min: 40, max:160}}],
+            yAxes: [{ticks: {min: 6, max:16}}],
+          }
+        }
+      });
+        new Chart("myChart4", {
+        type: "line",
+        data: {
+          labels: [{{range .Graph4}}'{{.X}}',{{end}}],
+          datasets: [{
+            label: 'Service Level',
+            pointRadius: 4,
+            pointBackgroundColor: '#009933',
+            borderColor: '#009933',
+            data: [{{range .Graph4}}'{{.Y}}',{{end}}]
+          },{
+            label: 'Service Level + 1',
+            pointRadius: 4,
+            pointBackgroundColor: '#66ccff',
+            borderColor: '#66ccff',
+            data: [{{range .Graph4}}'{{.Z}}',{{end}}]
+          },{
+            label: 'Target',
+            pointRadius: 0,
+            pointBackgroundColor: '#cccc00',
+            borderColor: '#cccc00',
+            data: [{{range .Graph4}}'0.8',{{end}}],
+            borderDash: [10,5]
+          }]
+        },
+        options: {
+          response: true,
+          maintainaspectratio: false,
           legend: {display: false},
           scales: {
             xAxes: [{ticks: {min: 40, max:160}}],

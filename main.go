@@ -32,7 +32,6 @@ type Page struct{
 
 type Message struct {
 	Success bool
-	// User string
 	Title string
   Body string
 }
@@ -82,28 +81,23 @@ func report(w http.ResponseWriter, r *http.Request) {
 }
 
 func Dashboard(w http.ResponseWriter, r *http.Request) {
-var page Page
-page.Permission = auth(w,r)
-	// fmt.Println(auth(w,r))
+		var page Page
+		page.Permission = auth(w,r)
     t, _ := template.ParseFiles("dashboard.html","header.html","login.js")
 		fmt.Println("Loading Dashboard...")
     page.Title = "Dashboard"
-		// if ordernum == "" {
-		// 	page.Message.Body = ""
-		// }
 		page.Message,page.Graph1  = Efficiency()
 		page.Message,page.Graph2 = Groupefficiency()
 		page.Message,page.Graph3 = ErrorLookup(time.Now().AddDate(0,0,-21),time.Now())
+		page.Message,page.Graph4 = Servicelevel()
 		page.Message,page.Table1 = ErrorList(time.Now().AddDate(0,0,-21),time.Now(),5)
-		// page.Order.ID=67099
     fmt.Println(page)
     t.Execute(w, page)
 }
 
 func Order(w http.ResponseWriter, r *http.Request) {
-var page Page
-page.Permission = auth(w,r)
-	// fmt.Println(auth(w,r))
+		var page Page
+		page.Permission = auth(w,r)
     t, _ := template.ParseFiles("order.html","header.html","login.js")
 		fmt.Println("Looking up order ",r.FormValue("ordernum"))
     page.Title = "Order Lookup"

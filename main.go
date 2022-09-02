@@ -90,7 +90,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		page.Message,page.Graph2 = Groupefficiency()
 		page.Message,page.Graph3 = ErrorLookup(time.Now().AddDate(0,0,-21),time.Now())
 		page.Message,page.Graph4 = Servicelevel()
-		page.Message,page.Table1 = ErrorList(time.Now().AddDate(0,0,-21),time.Now(),5)
+		page.Message,page.Table1 = ErrorList(time.Now().AddDate(0,0,-21),time.Now(),25)
     fmt.Println(page)
     t.Execute(w, page)
 }

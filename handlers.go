@@ -84,7 +84,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	// Create a new random session token
 	// we use the "github.com/google/uuid" library to generate UUIDs
 	sessionToken := uuid.NewString()
-	expiresAt := time.Now().Add(120 * time.Second)
+	expiresAt := time.Now().Add(300 * time.Second)
 	// fmt.Println("Authorized")
 
 	// Set the token in the session map, along with the session information
@@ -138,7 +138,7 @@ func auth(w http.ResponseWriter, r *http.Request) (permission string){
 	fmt.Println("Authorized")
 	// If the previous session is valid, create a new session token for the current user
 	newSessionToken := uuid.NewString()
-	expiresAt := time.Now().Add(120 * time.Second)
+	expiresAt := time.Now().Add(300 * time.Second)
 
 	// Set the token in the session map, along with the user whom it represents
 	sessions[newSessionToken] = session{
@@ -153,7 +153,7 @@ func auth(w http.ResponseWriter, r *http.Request) (permission string){
 	http.SetCookie(w, &http.Cookie{
 		Name:    "session_token",
 		Value:   newSessionToken,
-		Expires: time.Now().Add(120 * time.Second),
+		Expires: time.Now().Add(300 * time.Second),
 	})
 	return userdata(userSession.username)
 }

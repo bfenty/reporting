@@ -42,3 +42,12 @@ select user, round(errors/hours,3) error_rate FROM (select user,usercode,count(*
 
 //Recent errors
 select a.orderid, b.user, a.issue, a.comment, b.time FROM errors a left join scans b on a.orderid = b.ordernum WHERE a.issue in ('Missing','Incorrect') AND b.station = 'pick' order by 5 desc limit 10
+
+//Hours worked
+select b.username,a.ratio FROM (
+SELECT payroll_id, sum(paid_hours)/sum(scheduled_hours) as ratio
+FROM shifts
+where cast(clock_in as date) between '2022-08-01' and '2022-08-31'
+group by payroll_id
+) a
+INNER JOIN users b on a.payroll_id = b.usercode

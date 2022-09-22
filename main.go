@@ -21,6 +21,8 @@ type Page struct{
   Message Message
 	Order OrderDetail
 	Permission string
+	Startdate string
+	Enddate string
 	Graph1 []Graph
 	Graph2 []Graph
 	Graph3 []Graph
@@ -89,18 +91,20 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		var startdate time.Time
 		var enddate time.Time
 		if r.FormValue("startdate") != "" && r.FormValue("enddate") != "" {
-			startdate,_ = time.Parse("2000-01-02",r.FormValue("startdate"))
-			enddate,_ = time.Parse("2000-01-02",r.FormValue("enddate"))
+			startdate,_ = time.Parse("2006-01-02",r.FormValue("startdate"))
+			enddate,_ = time.Parse("2006-01-02",r.FormValue("enddate"))
 		} else {
 			startdate = time.Now().AddDate(0,0,-21)
 			enddate = time.Now()
 		}
 		fmt.Println("Start:",r.FormValue("startdate")," End:",enddate)
 		page.Message,page.Graph1  = Efficiency(startdate,enddate)
-		page.Message,page.Graph2 = Groupefficiency(time.Now().AddDate(0,0,-21),time.Now())
-		page.Message,page.Graph3 = ErrorLookup(time.Now().AddDate(0,0,-21),time.Now())
+		page.Message,page.Graph2 = Groupefficiency(startdate,enddate)
+		page.Message,page.Graph3 = ErrorLookup(startdate,enddate)
 		page.Message,page.Graph4 = Servicelevel(time.Now().AddDate(0,0,-63),time.Now())
-		page.Message,page.Table1 = ErrorList(time.Now().AddDate(0,0,-21),time.Now(),25)
+		page.Message,page.Table1 = ErrorList(startdate,enddate,30)
+		page.Startdate = startdate.Format("2006-01-02")
+		page.Enddate = enddate.Format("2006-01-02")
     fmt.Println(page)
     t.Execute(w, page)
 }

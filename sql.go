@@ -167,18 +167,18 @@ func ErrorLookup(startdate time.Time, enddate time.Time) (message Message, graph
   return message,graph
 }
 
-func Efficiency() (message Message, graph []Graph){
+func Efficiency(startdate time.Time, enddate time.Time) (message Message, graph []Graph){
 
   //Test Connection
   pingErr := db.Ping()
   if pingErr != nil {return handleerror(pingErr),graph}
 
-  var newquery string = "SELECT d.user,sum(d.items)/sum(e.hours) FROM (SELECT a.date,a.user,c.usercode,sum(b.items_total) items FROM (SELECT ordernum, station, user, DATE(scans.time) as date from scans where station='pick' group by ordernum, station, user, DATE(scans.time)) a INNER JOIN (SELECT id, items_total from orders) b on a.ordernum = b.id LEFT JOIN (SELECT usercode,username from users) c on a.user = c.username GROUP BY a.date,a.user,c.usercode) d LEFT JOIN (SELECT DATE(clock_in) clockin,payroll_id, sum(paid_hours) hours from shifts where role='Shipping' group by DATE(clock_in),payroll_id) e on d.date = e.clockin and d.usercode = e.payroll_id WHERE d.items IS NOT NULL and e.hours IS NOT NULL GROUP BY d.user ORDER BY 1,2;"
+  var newquery string = "SELECT d.user,sum(d.items)/sum(e.hours) FROM (SELECT a.date,a.user,c.usercode,sum(b.items_total) items FROM (SELECT ordernum, station, user, DATE(scans.time) as date from scans where station='pick' group by ordernum, station, user, DATE(scans.time)) a INNER JOIN (SELECT id, items_total from orders) b on a.ordernum = b.id LEFT JOIN (SELECT usercode,username from users) c on a.user = c.username GROUP BY a.date,a.user,c.usercode) d LEFT JOIN (SELECT DATE(clock_in) clockin,payroll_id, sum(paid_hours) hours from shifts where role='Shipping' group by DATE(clock_in),payroll_id) e on d.date = e.clockin and d.usercode = e.payroll_id WHERE d.items IS NOT NULL and e.hours IS NOT NULL and d.date between ? and ? GROUP BY d.user ORDER BY 1,2;"
 
   //Run Query
   fmt.Println("Running Report")
   // location, err := time.LoadLocation("America/Chicago")
-  rows, err := db.Query(newquery)
+  rows, err := db.Query(newquery,startdate,enddate)
   if err != nil {
     return handleerror(err),graph
   }
@@ -196,18 +196,18 @@ func Efficiency() (message Message, graph []Graph){
   return message,graph
 }
 
-func Servicelevel() (message Message, graph []Graph){
+func Servicelevel(startdate time.Time, enddate time.Time) (message Message, graph []Graph){
 
   //Test Connection
   pingErr := db.Ping()
   if pingErr != nil {return handleerror(pingErr),graph}
 
-  var newquery string = "SELECT week, sum(case when SL < 3 then 1 else 0 end)/count(*) as SL, sum(case when SL < 4 then 1 else 0 end)/count(*) as SL1 FROM (select DATE_ADD(cast(a.date_created as date), INTERVAL(-WEEKDAY(cast(a.date_created as date))) DAY) as week,TOTAL_WEEKDAYS(b.time,a.date_created) - 1 as SL FROM orders a LEFT JOIN scans b ON a.id = b.ordernum where b.station = 'ship') c GROUP BY week ORDER BY 1"
+  var newquery string = "SELECT week, sum(case when SL < 3 then 1 else 0 end)/count(*) as SL, sum(case when SL < 4 then 1 else 0 end)/count(*) as SL1 FROM (select DATE_ADD(cast(a.date_created as date), INTERVAL(-WEEKDAY(cast(a.date_created as date))) DAY) as week,TOTAL_WEEKDAYS(b.time,a.date_created) - 1 as SL FROM orders a LEFT JOIN scans b ON a.id = b.ordernum where b.station = 'ship' and a.date_created between ? and ?) c GROUP BY week ORDER BY 1"
 
   //Run Query
   fmt.Println("Running Report")
   // location, err := time.LoadLocation("America/Chicago")
-  rows, err := db.Query(newquery)
+  rows, err := db.Query(newquery,startdate,enddate)
   if err != nil {
     return handleerror(err),graph
   }
@@ -225,18 +225,18 @@ func Servicelevel() (message Message, graph []Graph){
   return message,graph
 }
 
-func Groupefficiency() (message Message, graph []Graph){
+func Groupefficiency(startdate time.Time, enddate time.Time) (message Message, graph []Graph){
 
   //Test Connection
   pingErr := db.Ping()
   if pingErr != nil {return handleerror(pingErr),graph}
 
-  var newquery string = "SELECT shipments.date, items/hours efficiency FROM (select CAST(c.time as date) date, sum(a.items_total) items from orders a  LEFT JOIN (select * FROM scans where station='ship') c ON a.id = c.ordernum  WHERE a.statusid not in (0) and c.time is not null  GROUP BY CAST(c.time as date)  ) shipments  LEFT JOIN (select cast(clock_in as date) date,sum(paid_hours) hours FROM shifts WHERE role = 'Shipping' group by cast(clock_in as date)) d on d.date = shipments.date  WHERE items is not null and hours is not null order by 1;"
+  var newquery string = "SELECT shipments.date, items/hours efficiency FROM (select CAST(c.time as date) date, sum(a.items_total) items from orders a  LEFT JOIN (select * FROM scans where station='ship') c ON a.id = c.ordernum  WHERE a.statusid not in (0) and c.time is not null  GROUP BY CAST(c.time as date)  ) shipments  LEFT JOIN (select cast(clock_in as date) date,sum(paid_hours) hours FROM shifts WHERE role = 'Shipping' group by cast(clock_in as date)) d on d.date = shipments.date  WHERE items is not null and hours is not null and d.date between ? and ? order by 1;"
 
   //Run Query
   fmt.Println("Running Report")
   // location, err := time.LoadLocation("America/Chicago")
-  rows, err := db.Query(newquery)
+  rows, err := db.Query(newquery,startdate,enddate)
   if err != nil {
     return handleerror(err),graph
   }

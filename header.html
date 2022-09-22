@@ -51,11 +51,12 @@ border-radius: 15px;
 
 .container {  display: grid;
   grid-template-columns: 5% 30% 30% 30% 5%;
-  grid-template-rows: 0.1fr 1.7fr 1.8fr 0.1fr;
+  grid-template-rows: 0.1fr 0.1fr 1.7fr 1.7fr 0.1fr;
   gap: 10px 10px;
   grid-auto-flow: row;
   max-width: none;
   grid-template-areas:
+    ". . . . ."
     ". . . . ."
     ". graph1 graph2 graph3 ."
     ". graph4 graph5 graph6 ."
@@ -98,7 +99,7 @@ border-radius: 15px;
   text-align:center;
 }
 
-.graph5 { grid-area: 3 / 3 / 4 / 5;
+.graph5 { grid-area: 4 / 3 / 5 / 5;
   background-color:#ffffff;
   color:333333;
   padding: 10px;
@@ -116,6 +117,14 @@ border-radius: 15px;
   text-align:center;
 }
 
+.datepicker { grid-area: 2 / 2 / 2 / 5;
+  background-color:#ffffff;
+  color:333333;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 15px;
+  text-align:center;
+}
 
 .messagebox { grid-area: messagebox;
   color:333333;

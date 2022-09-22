@@ -8,6 +8,17 @@
   <br>
   {{template "messagebox" .}}
   <div class="container">
+    <div class="datepicker" class="formentry">
+        <form action="/dashboard" method="POST">
+          <table style="width:100%">
+            <tr>
+              <td style="width:33% text-align:center">From:<input type=date class="form-control" name="startdate"></td>
+              <td style="width:33% text-align:center">To:<input type=date class="form-control" name="enddate"></td>
+              <td style="width:33% text-align:center"><button type=submit class="btn btn-primary">Update</button></td>
+            </tr>
+          </table>
+        </form>
+    </div>
     <div class="graph1">
         <canvas id="myChart" width="15vw" height="10vh"></canvas>
     </div>

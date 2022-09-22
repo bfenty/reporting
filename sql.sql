@@ -51,3 +51,5 @@ where cast(clock_in as date) between '2022-08-01' and '2022-08-31'
 group by payroll_id
 ) a
 INNER JOIN users b on a.payroll_id = b.usercode
+//Service Level
+SELECT week, sum(case when SL < 3 then 1 else 0 end)/count(*) as SL, sum(case when SL < 4 then 1 else 0 end)/count(*) as SL1 FROM (select DATE_ADD(cast(a.date_created as date), INTERVAL(-WEEKDAY(cast(a.date_created as date))) DAY) as week,TOTAL_WEEKDAYS(b.time,a.date_created) - 1 as SL FROM orders a LEFT JOIN scans b ON a.id = b.ordernum where b.station = 'ship') c GROUP BY week ORDER BY 1

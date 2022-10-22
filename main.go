@@ -60,21 +60,20 @@ func handleerror(err error) (message Message){
 }
 
 func main() {
-  	fmt.Println("Starting Server...")
+  fmt.Println("Starting Server...")
 	var messagebox Message
-	// db, messagebox = opendb()
+	db, messagebox = opendb()
 	fmt.Println(messagebox.Body)
 	http.HandleFunc("/", login)
-  	http.HandleFunc("/login", login)
-  	http.HandleFunc("/signup", signup)
-  	http.HandleFunc("/logout", Logout)
-  	http.HandleFunc("/signin", Signin)
-  	http.HandleFunc("/usercreate", Usercreate)
+  http.HandleFunc("/login", login)
+  http.HandleFunc("/signup", signup)
+  http.HandleFunc("/logout", Logout)
+  http.HandleFunc("/signin", Signin)
+  http.HandleFunc("/usercreate", Usercreate)
 	http.HandleFunc("/order", Order)
 	http.HandleFunc("/error", Error)
 	http.HandleFunc("/dashboard", Dashboard)
-	http.HandleFunc("/products", Products)
-	http.ListenAndServe(":8082", nil)
+	http.ListenAndServe(":8081", nil)
 }
 
 func report(w http.ResponseWriter, r *http.Request) {
@@ -84,50 +83,28 @@ func report(w http.ResponseWriter, r *http.Request) {
 }
 
 func Dashboard(w http.ResponseWriter, r *http.Request) {
-	var page Page
-	// page.Permission = auth(w,r)
+		var page Page
+		page.Permission = auth(w,r)
     t, _ := template.ParseFiles("dashboard.html","header.html","login.js")
-	fmt.Println("Loading Dashboard...")
+		fmt.Println("Loading Dashboard...")
     page.Title = "Dashboard"
-	var startdate time.Time
-	var enddate time.Time
-	if r.FormValue("startdate") != "" && r.FormValue("enddate") != "" {
-		startdate,_ = time.Parse("2006-01-02",r.FormValue("startdate"))
-		enddate,_ = time.Parse("2006-01-02",r.FormValue("enddate"))
-	} else {
-		startdate = time.Now().AddDate(0,0,-21)
-		enddate = time.Now()
-	}
-	fmt.Println("Start:",r.FormValue("startdate")," End:",enddate)
-	// page.Message,page.Graph1 = Efficiency(startdate,enddate)
-	// page.Message,page.Graph2 = Groupefficiency(startdate,enddate)
-	// page.Message,page.Graph3 = ErrorLookup(startdate,enddate)
-	// page.Message,page.Graph4 = Servicelevel(time.Now().AddDate(0,0,-63),time.Now())
-	// page.Message,page.Table1 = ErrorList(startdate,enddate,30)
-	page.Startdate = startdate.Format("2006-01-02")
-	page.Enddate = enddate.Format("2006-01-02")
-    fmt.Println(page)
-    t.Execute(w, page)
-}
-
-func Products(w http.ResponseWriter, r *http.Request) {
-	var page Page
-	// page.Permission = auth(w,r)
-    t, _ := template.ParseFiles("products.html","header.html","login.js")
-	fmt.Println("Loading Products...")
-    page.Title = "Products"
-	var startdate time.Time
-	var enddate time.Time
-	if r.FormValue("startdate") != "" && r.FormValue("enddate") != "" {
-		startdate,_ = time.Parse("2006-01-02",r.FormValue("startdate"))
-		enddate,_ = time.Parse("2006-01-02",r.FormValue("enddate"))
-	} else {
-		startdate = time.Now().AddDate(0,0,-21)
-		enddate = time.Now()
-	}
-	fmt.Println("Start:",r.FormValue("startdate")," End:",enddate)
-	page.Startdate = startdate.Format("2006-01-02")
-	page.Enddate = enddate.Format("2006-01-02")
+		var startdate time.Time
+		var enddate time.Time
+		if r.FormValue("startdate") != "" && r.FormValue("enddate") != "" {
+			startdate,_ = time.Parse("2006-01-02",r.FormValue("startdate"))
+			enddate,_ = time.Parse("2006-01-02",r.FormValue("enddate"))
+		} else {
+			startdate = time.Now().AddDate(0,0,-21)
+			enddate = time.Now()
+		}
+		fmt.Println("Start:",r.FormValue("startdate")," End:",enddate)
+		page.Message,page.Graph1  = Efficiency(startdate,enddate)
+		page.Message,page.Graph2 = Groupefficiency(startdate,enddate)
+		page.Message,page.Graph3 = ErrorLookup(startdate,enddate)
+		page.Message,page.Graph4 = Servicelevel(time.Now().AddDate(0,0,-63),time.Now())
+		page.Message,page.Table1 = ErrorList(startdate,enddate,30)
+		page.Startdate = startdate.Format("2006-01-02")
+		page.Enddate = enddate.Format("2006-01-02")
     fmt.Println(page)
     t.Execute(w, page)
 }

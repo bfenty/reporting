@@ -1,0 +1,86 @@
+<html>
+<head>
+{{template "header"}}
+
+</head>
+<body>
+  {{template "navigation" .}}
+  <br>
+  {{template "messagebox" .}}
+  <div class="container3">
+    <div class="formentry">
+      <canvas id="EmployeeEff" width="20vw" height="20vh"></canvas>
+      <form action="/dashboard" method="POST">
+        <div><input type="date" class="form-control" name="startdate" id="startdate"></div>
+          <div><input type="date" class="form-control" name="enddate" id="enddate"></div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+  <div class="container3">
+    <div class="formentry">
+      <canvas id="DailyEff" width="20vw" height="20vh"></canvas>
+    </div>
+  </div>
+  <script>
+  const ctx = document.getElementById('EmployeeEff');
+  const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: [{{range .Graph2}}'{{.X}}',{{end}}],
+          datasets: [{
+              label: 'Items Picked/Hr',
+              data: [{{range .Graph2}}'{{.Y}}',{{end}}],
+              backgroundColor: [
+                  'rgba(102, 255, 153, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(0, 102, 0, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+        response: true,
+        maintainaspectratio: false,
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+</script>
+<script>
+
+  const ctx2 = document.getElementById('DailyEff');
+  const myChart2 = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: [{{range .Graph2}}'{{.X}}',{{end}}],
+          datasets: [{
+              label: 'Items Picked/Hr',
+              data: [{{range .Graph2}}'{{.Y}}',{{end}}],
+              backgroundColor: [
+                  'rgba(102, 255, 153, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(0, 102, 0, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+        response: true,
+        maintainaspectratio: false,
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+  </script>
+  {{template "footer" .}}
+</body>
+</html>

@@ -1,0 +1,25 @@
+<html>
+<head>
+{{template "header"}}
+</head>
+<body>
+  {{template "navigation" .}}
+  <br>
+  {{template "messagebox" .}}
+  <div class="formentry">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Item #</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type='text'></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+  {{template "footer" .}}
+</body>
+</html>

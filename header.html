@@ -172,7 +172,7 @@ border-radius: 15px;
         <a class="nav-link" href="/order">Order Lookup<span class="sr-only">(current)</span></a>
       </li>
       {{end}}
-      {{if or (eq .Permission "admin") (eq .Permission "cs")}}
+      {{if or (eq .Permission "admin") (eq .Permission "cs") (eq .Permission "manage")}}
       <li class="nav-item active">
         <a class="nav-link" href="/error">Errors <span class="sr-only">(current)</span></a>
       </li>
